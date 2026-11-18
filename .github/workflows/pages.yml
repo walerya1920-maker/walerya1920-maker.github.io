@@ -21,8 +21,12 @@ jobs:
       - uses: actions/configure-pages@v5
         with:
           enablement: true
+      - name: Собрать папку сайта
+        run: |
+          mkdir -p _site
+          cp -r index.html img lib _site/
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
       - id: deployment
         uses: actions/deploy-pages@v4
