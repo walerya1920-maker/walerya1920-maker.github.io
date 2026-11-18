@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<defs>
+  <radialGradient id="bg" cx="50%" cy="36%" r="72%"><stop offset="0" stop-color="#3c3f96"/><stop offset=".6" stop-color="#20214f"/><stop offset="1" stop-color="#0f1029"/></radialGradient>
+  <radialGradient id="skin" cx="44%" cy="38%" r="66%"><stop offset="0" stop-color="#ffe6d4"/><stop offset=".62" stop-color="#f6cbae"/><stop offset="1" stop-color="#e3a88a"/></radialGradient>
+  <radialGradient id="skin2" cx="45%" cy="35%" r="70%"><stop offset="0" stop-color="#fbd8bf"/><stop offset="1" stop-color="#e0a688"/></radialGradient>
+  <linearGradient id="hair" gradientUnits="userSpaceOnUse" x1="0" y1="30" x2="0" y2="124"><stop offset="0" stop-color="#ff4a3f"/><stop offset=".45" stop-color="#e01b26"/><stop offset="1" stop-color="#a00c18"/></linearGradient>
+  <linearGradient id="hairB" gradientUnits="userSpaceOnUse" x1="0" y1="40" x2="0" y2="160"><stop offset="0" stop-color="#b50f1c"/><stop offset="1" stop-color="#5e050d"/></linearGradient>
+  <linearGradient id="blazer" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2c4a"/><stop offset="1" stop-color="#0c0d1a"/></linearGradient>
+  <radialGradient id="iris" cx="45%" cy="38%" r="62%"><stop offset="0" stop-color="#8a5532"/><stop offset=".65" stop-color="#432514"/><stop offset="1" stop-color="#1c0e07"/></radialGradient>
+  <linearGradient id="lip" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4716b"/><stop offset="1" stop-color="#e88e86"/></linearGradient>
+  <clipPath id="c"><circle cx="100" cy="100" r="100"/></clipPath>
+  <clipPath id="eL"><path d="M69 101 Q80 85.5 96 98 Q84 109 69 101Z"/></clipPath>
+  <clipPath id="eR"><path d="M131 101 Q120 85.5 104 98 Q116 109 131 101Z"/></clipPath>
+  <style>
+    .nod{transform-box:view-box;transform-origin:100px 146px;animation:nod 4.8s ease-in-out infinite}
+    .fore{transform-box:view-box;transform-origin:164px 152px;animation:wave 4.8s ease-in-out infinite}
+    .blink{transform-box:view-box;transform-origin:100px 99px;animation:blink 4.8s infinite}
+    .bob{transform-box:view-box;transform-origin:100px 200px;animation:bob 2.4s ease-in-out infinite}
+    @keyframes wave{0%,3%{transform:rotate(0)}9%{transform:rotate(-22deg)}16%{transform:rotate(12deg)}23%{transform:rotate(-22deg)}30%{transform:rotate(12deg)}37%{transform:rotate(-18deg)}44%,100%{transform:rotate(0)}}
+    @keyframes nod{0%,47%{transform:rotate(0)}53%{transform:translateY(3px) rotate(5deg)}59%{transform:rotate(-1deg)}65%{transform:translateY(3px) rotate(5deg)}72%{transform:rotate(0)}83%{transform:rotate(-3deg)}93%,100%{transform:rotate(0)}}
+    @keyframes blink{0%,30%,33%,86%,89%,100%{transform:scaleY(1)}31.5%,87.5%{transform:scaleY(.08)}}
+    @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(1.6px)}}
+    @media (prefers-reduced-motion:reduce){.nod,.fore,.blink,.bob{animation:none}}
+  </style>
+</defs>
+<circle cx="100" cy="100" r="100" fill="url(#bg)"/>
+<g clip-path="url(#c)">
+  <ellipse cx="100" cy="198" rx="80" ry="10" fill="#000" opacity=".25"/>
+  <g class="bob">
+  <!-- задние пряди: объёмный маллет / wolf cut -->
+  <g class="nod">
+    <path fill="url(#hairB)" d="M50 96 C44 52 70 26 100 26 C130 26 156 52 150 96 C150 112 146 124 140 132 L60 132 C54 124 50 112 50 96Z"/>
+    <path fill="url(#hairB)" d="M43.0 104.0 Q30.0 127.0 38.0 150.0 Q60.0 127.0 73.0 104.0Z M56.0 118.0 Q47.1 139.0 54.0 160.0 Q71.1 139.0 80.0 118.0Z M73.0 126.0 Q70.2 143.0 76.0 160.0 Q92.2 143.0 95.0 126.0Z M127.0 104.0 Q140.0 127.0 162.0 150.0 Q170.0 127.0 157.0 104.0Z M120.0 118.0 Q128.9 139.0 146.0 160.0 Q152.9 139.0 144.0 118.0Z M105.0 126.0 Q107.8 143.0 124.0 160.0 Q129.8 143.0 127.0 126.0Z M89.0 128.0 Q89.0 142.0 100.0 156.0 Q111.0 142.0 111.0 128.0Z M44.0 88.0 Q37.2 110.0 46.0 132.0 Q57.2 110.0 64.0 88.0Z M136.0 88.0 Q142.8 110.0 154.0 132.0 Q162.8 110.0 156.0 88.0Z"/>
+  </g>
+  <!-- шея -->
+  <path fill="url(#skin2)" d="M88 128 L112 128 L113 156 Q100 163 87 156Z"/>
+  <path fill="#cf8d70" opacity=".5" d="M88 130 Q100 143 112 130 L112 138 Q100 148 88 138Z"/>
+  <!-- тело: жакет, рубашка, кулон -->
+  <path fill="url(#blazer)" d="M20 216 C22 182 42 162 76 154 L100 186 L124 154 C158 162 178 182 180 216Z"/>
+  <path fill="#f4f5fa" d="M80 152 L100 186 L120 152 L113 148 Q100 160 87 148Z"/>
+  <path fill="#ffffff" d="M87 148 L79 152 L91 169 L98 158Z M113 148 L121 152 L109 169 L102 158Z"/>
+  <path fill="#30335a" d="M76 154 L100 186 L84 198 L64 162Z M124 154 L100 186 L116 198 L136 162Z"/>
+  <path fill="none" stroke="#d3d6e2" stroke-width=".9" d="M89 152 Q100 171 111 152"/>
+  <path fill="#1e2b3d" stroke="#d3d6e2" stroke-width=".7" d="M100 165.5 q-3.6 4.8 0 9 q3.6 -4.2 0 -9Z"/>
+  <circle cx="99.1" cy="169.6" r=".9" fill="#fff" opacity=".85"/>
+  <!-- рука: машет -->
+  <path fill="url(#blazer)" d="M134 160 C150 155 166 158 172 167 L174 178 C166 184 150 188 136 181Z"/>
+  <g class="fore">
+    <path fill="url(#blazer)" d="M155 168 C157 152 159 134 161 122 L177 122 C177 136 175 154 173 172Z"/>
+    <path fill="#f4f5fa" d="M160.6 119 L177.6 119 L177 125.5 L161 125.5Z"/>
+    <path fill="url(#skin2)" d="M160 119 C157 111 157 101 160 95 L162 81 Q164 76.5 166.2 81 L166.4 93 L168 76 Q170.2 71.6 172.4 76 L171.8 93 L174.6 79 Q177.2 75 178.8 79.6 L176.4 95 L180 86 Q183.2 82.6 184.4 86.6 L180.4 103 C179.4 113 176 119 170 121Z"/>
+    <path fill="url(#skin2)" d="M160.5 106 C154 102 150.5 97.5 151.5 94 Q153.5 90.5 158 93.6 L162.5 99Z"/>
+    <path fill="#16121a" d="M162.3 80.4 q1.8 -2.8 3.7 0 l-.2 2.1 h-3.3Z M168.3 75.6 q1.8 -2.8 3.8 0 l-.2 2.1 h-3.4Z M174.9 79 q1.8 -2.5 3.5 .4 l-.4 2 l-3.2 -.5Z M180.6 85.9 q1.9 -2.2 3.3 .7 l-.6 1.9 l-3.1 -.9Z M151.6 94.5 q.8 -2.6 3.3 -1.4 l-.2 2 l-2.6 .6Z"/>
+    <path fill="none" stroke="#d3d6e2" stroke-width="1.4" d="M166.6 90.5 L171.8 91"/>
+    <path fill="none" stroke="#cf8d70" stroke-width=".8" opacity=".6" d="M166.3 93 L166.6 101 M171.6 93 L171.6 102 M176 95 L175 102"/>
+  </g>
+  <!-- голова -->
+  <g class="nod">
+    <ellipse cx="57" cy="104" rx="6.5" ry="9.5" fill="url(#skin2)"/>
+    <ellipse cx="143" cy="104" rx="6.5" ry="9.5" fill="url(#skin2)"/>
+    <circle cx="56.5" cy="112" r="1.6" fill="#e3e5ef"/><circle cx="143.5" cy="112" r="1.6" fill="#e3e5ef"/>
+    <path fill="url(#skin)" d="M58 95 C58 63 78 48 100 48 C122 48 142 63 142 95 C142 123 124 142 100 144 C76 142 58 123 58 95Z"/>
+    <ellipse cx="74" cy="117" rx="9" ry="5" fill="#ff8080" opacity=".26"/>
+    <ellipse cx="126" cy="117" rx="9" ry="5" fill="#ff8080" opacity=".26"/>
+    <!-- брови (частично под чёлкой) -->
+    <path fill="#6b1d1d" d="M70 85.5 Q81 80 94 84.5 Q81 83.2 70 87.5Z M130 85.5 Q119 80 106 84.5 Q119 83.2 130 87.5Z"/>
+    <!-- глаза -->
+    <g class="blink">
+      <path fill="#fff" d="M69 101 Q80 85.5 96 98 Q84 109 69 101Z"/>
+      <g clip-path="url(#eL)"><circle cx="82.6" cy="97.6" r="7.6" fill="url(#iris)"/><circle cx="82.6" cy="97.6" r="3.3" fill="#120806"/><circle cx="85.2" cy="94.8" r="2.4" fill="#fff"/><circle cx="80" cy="100.6" r="1.1" fill="#fff" opacity=".75"/></g>
+      <path fill="#fff" d="M131 101 Q120 85.5 104 98 Q116 109 131 101Z"/>
+      <g clip-path="url(#eR)"><circle cx="117.4" cy="97.6" r="7.6" fill="url(#iris)"/><circle cx="117.4" cy="97.6" r="3.3" fill="#120806"/><circle cx="120" cy="94.8" r="2.4" fill="#fff"/><circle cx="114.8" cy="100.6" r="1.1" fill="#fff" opacity=".75"/></g>
+      <path fill="none" stroke="#1a0f12" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" d="M64.5 96.5 L69.5 100.6 Q80 85 96.2 97.8"/>
+      <path fill="none" stroke="#1a0f12" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" d="M135.5 96.5 L130.5 100.6 Q120 85 103.8 97.8"/>
+      <path fill="none" stroke="#b97e68" stroke-width=".9" opacity=".55" d="M72 103.5 Q83 108.5 94 101.5 M128 103.5 Q117 108.5 106 101.5"/>
+    </g>
+    <!-- нос -->
+    <path fill="#e8b294" opacity=".55" d="M98.6 102 Q97 109 98 113 L101.2 113 Z"/>
+    <path fill="none" stroke="#c4866b" stroke-width="1.5" stroke-linecap="round" d="M97 114.5 Q100 117 103 114.5"/>
+    <!-- губы: мягкая улыбка -->
+    <path fill="url(#lip)" d="M89 124 Q94.5 120.4 100 122.4 Q105.5 120.4 111 124 Q100 126.2 89 124Z"/>
+    <path fill="url(#lip)" d="M90 124.5 Q100 126.8 110 124.5 Q106.5 132 100 132 Q93.5 132 90 124.5Z"/>
+    <path fill="none" stroke="#9a4846" stroke-width="1" stroke-linecap="round" d="M87.8 123 Q100 127.6 112.2 123"/>
+    <ellipse cx="100" cy="128.4" rx="3.6" ry="1.2" fill="#fff" opacity=".35"/>
+    <!-- передние пряди -->
+    <path fill="url(#hair)" d="M52 96 C46 56 70 30 100 30 C130 30 154 56 148 96 C144 80 138 70 128 64 L72 64 C62 70 56 80 52 96Z"/>
+    <path fill="url(#hair)" d="M58.0 60.0 Q52.2 79.0 62.0 98.0 Q76.2 79.0 82.0 60.0Z M73.0 56.0 Q69.2 74.5 79.0 93.0 Q91.2 74.5 95.0 56.0Z M88.0 54.0 Q86.6 72.5 95.0 91.0 Q108.6 72.5 110.0 54.0Z M102.0 55.0 Q106.4 72.5 117.0 90.0 Q128.4 72.5 124.0 55.0Z M116.0 59.0 Q121.5 76.0 134.0 93.0 Q143.4 76.0 138.0 59.0Z M70.0 60.0 Q68.6 73.0 73.0 86.0 Q82.6 73.0 84.0 60.0Z M99.0 55.0 Q99.0 69.0 106.0 83.0 Q113.0 69.0 113.0 55.0Z M114.0 58.0 Q115.8 71.0 126.0 84.0 Q129.8 71.0 128.0 58.0Z M85.0 55.0 Q83.6 68.5 87.0 82.0 Q95.6 68.5 97.0 55.0Z M51.0 76.0 Q45.2 100.0 55.0 124.0 Q63.2 100.0 69.0 76.0Z M131.0 76.0 Q137.4 99.0 147.0 122.0 Q155.4 99.0 149.0 76.0Z M58.0 90.0 Q55.3 103.0 62.0 116.0 Q67.3 103.0 70.0 90.0Z M130.0 90.0 Q133.1 102.0 139.0 114.0 Q145.1 102.0 142.0 90.0Z"/>
+    <path fill="none" stroke="#ff7a6c" stroke-width="2.2" stroke-linecap="round" opacity=".7" d="M74 44 Q66 58 68 76 M94 38 Q89 52 90 66 M114 39 Q121 52 120 68 M132 49 Q139 62 137 80"/>
+    <path fill="none" stroke="#8d0a16" stroke-width="1.3" stroke-linecap="round" opacity=".55" d="M84 48 Q79 64 82 82 M104 46 Q105 62 108 76 M62 72 Q59 90 61 106 M138 72 Q141 90 139 106"/>
+    <path fill="#ff8a7c" opacity=".5" d="M80 41 Q100 33 120 41 Q100 38 80 45Z"/>
+  </g>
+  </g>
+</g>
+<circle cx="100" cy="100" r="98.5" fill="none" stroke="#ffffff" stroke-opacity=".9" stroke-width="3"/>
+</svg>
