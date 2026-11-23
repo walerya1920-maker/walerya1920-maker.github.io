@@ -1040,6 +1040,8 @@ let S;let memoryOnly=false;
 function load(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){memoryOnly=true}return null}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));memoryOnly=false}catch(e){memoryOnly=true}}
 S=load()||seed();
+/* синхронизируем витрину портфолио с кодом: добавляем новые проекты из seed, не трогая остальные данные */
+{const _sd=seed();const _have=new Set((S.site&&S.site.portfolio||[]).map(p=>p.id));(_sd.site.portfolio||[]).forEach(p=>{if(!_have.has(p.id))S.site.portfolio.push(p)});}
 let session=null;try{const s=sessionStorage.getItem(KEY+"-s");if(s)session=JSON.parse(s)}catch(e){}
 function setSession(v){session=v;try{v?sessionStorage.setItem(KEY+"-s",JSON.stringify(v)):sessionStorage.removeItem(KEY+"-s")}catch(e){}}
 
