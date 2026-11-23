@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://walerya1920-maker.github.io/sitemap.xml
