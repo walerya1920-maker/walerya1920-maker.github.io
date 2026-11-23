@@ -1036,12 +1036,15 @@ function seed(){
   {id:"a1",role:"admin",first:"",title:"",name:"Сисадмин",pin:"3333"},
   {id:"s1",role:"smm",first:"",title:"",name:"SMM / менеджер",pin:"2222"},
   {id:"w1",role:"staff",first:"",title:"",name:"Сотрудник",pin:"4444"}];
- return Object.assign({site,leads,campaigns,links,refs,users,visits:4210},platformSeed());
+ return cleanDemo(Object.assign({site,leads,campaigns,links,refs,users,visits:4210},platformSeed()));
 }
+/* убирает примеры: заявки, проекты и кабинеты демо-клиентов, ленту, цифры аналитики, кампании. Тексты сайта, цены, портфолио, опубликованные отзывы и команда остаются */
+function cleanDemo(d){d.leads=[];d.projects=[];d.feed=[];d.stats={days:{},search:{g:{},y:{}},projs:{},queries:[]};d.campaigns=[];d.refs=[];d.links=(d.links||[]).map(l=>Object.assign({},l,{clicks:0,spend:0}));d.visits=0;if(d.site){d.site.cheats=[];d.site.reviews=(d.site.reviews||[]).filter(r=>r.status==="published")}d.demoWiped=1;return d}
 let S;let memoryOnly=false;
 function load(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){memoryOnly=true}return null}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));memoryOnly=false}catch(e){memoryOnly=true}}
 S=load()||seed();
+if(!S.demoWiped){cleanDemo(S);save()}
 /* синхронизируем витрину портфолио с кодом: добавляем новые проекты из seed, не трогая остальные данные */
 {const _sd=seed();const _have=new Set((S.site&&S.site.portfolio||[]).map(p=>p.id));(_sd.site.portfolio||[]).forEach(p=>{if(!_have.has(p.id))S.site.portfolio.push(p)});}
 let session=null;try{const s=sessionStorage.getItem(KEY+"-s");if(s)session=JSON.parse(s)}catch(e){}
@@ -1427,7 +1430,7 @@ function renderLogin(){
  '<div class="role-pick">'+roles.map(r=>'<button class="'+(loginRole===r[0]?'on':'')+'" data-act="lrole" data-id="'+r[0]+'"><b>'+r[1]+'</b><span>'+r[2]+'</span></button>').join("")+'</div>'+
  '<form data-form="login"><div class="field"><label for="pin">PIN-код</label><input id="pin" name="pin" type="password" inputmode="numeric" autocomplete="off" required></div><div id="lerr"></div>'+
  '<button class="btn" type="submit" style="width:100%;justify-content:center">Войти</button></form>'+
- '<p class="hint" style="margin-top:16px">Вход открывается с сайта сочетанием Ctrl + Alt + P или пятью быстрыми нажатиями на логотип. Демо-доступ: владелец 0000, сисадмин 3333, SMM и менеджер 2222, сотрудник 4444. Владелец меняет PIN-коды в разделе «Команда».</p>'+
+ '<p class="hint" style="margin-top:16px">Вход открывается с сайта сочетанием Ctrl + Alt + P или пятью быстрыми нажатиями на логотип. PIN-код выдаёт владелец в разделе «Команда».</p>'+
  '<p style="margin-top:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><button class="staff-link" data-act="toHome">← На сайт</button><button class="staff-link" data-act="page" data-id="cabinet">Я клиент — кабинет проекта →</button></p></div></div>';
 }
 
@@ -1945,7 +1948,7 @@ function renderCabLogin(err){
  document.body.className="cab-body";
  app.innerHTML='<div class="cab-login"><div class="cab-box"><img src="img/logo.png" alt="Parametric Interior" width="170" height="28" style="filter:invert(1)"><div class="eyebrow" style="margin-top:28px">Кабинет клиента</div><h1>Ваш проект<br>онлайн</h1><p class="muted">Этапы, документы, оплаты, фото с объекта и чат с командой. Код для входа присылает ваш менеджер после подписания договора.</p>'+
  '<form data-form="cablogin"><div class="field"><label for="cl-phone">Номер телефона</label><input id="cl-phone" name="phone" type="tel" placeholder="+7" required autocomplete="tel"></div><div class="field"><label for="cl-code">Код из сообщения</label><input id="cl-code" name="code" inputmode="numeric" maxlength="6" required autocomplete="one-time-code"></div>'+(err?'<p class="err">'+esc(err)+'</p>':'')+
- '<button class="btn" type="submit" style="width:100%;justify-content:center">Войти</button></form><p class="hint">Входя в кабинет, вы соглашаетесь с <button type="button" class="lnk2" data-act="policy" style="color:#b9bcff">Политикой конфиденциальности</button>.</p><p class="hint">Демо: +7 701 555-12-34, код 4821 (дизайн-проект) или +7 705 220-48-15, код 7310 (ремонт).</p><p><button class="staff-link" data-act="toHome">← На сайт</button></p></div><div class="cab-art"><img src="img/hd-sig81.jpg" alt=""></div></div>';
+ '<button class="btn" type="submit" style="width:100%;justify-content:center">Войти</button></form><p class="hint">Входя в кабинет, вы соглашаетесь с <button type="button" class="lnk2" data-act="policy" style="color:#b9bcff">Политикой конфиденциальности</button>.</p><p><button class="staff-link" data-act="toHome">← На сайт</button></p></div><div class="cab-art"><img src="img/hd-sig81.jpg" alt=""></div></div>';
 }
 function renderCabinet(){
  const p=cabProject();if(!p){setSession(null);renderCabLogin();return}
