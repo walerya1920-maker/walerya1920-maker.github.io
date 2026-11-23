@@ -910,6 +910,8 @@ img,video{max-width:100%}
 "use strict";
 /* ================= DATA ================= */
 const KEY="parametric-crm-v33";
+/* Адрес бота заявок (Cloudflare Worker). Пока пусто, заявки остаются только в браузере. Пример: "https://parametric-leads.имя.workers.dev/lead" */
+const LEAD_ENDPOINT="https://parametric-leads.walerya1920.workers.dev/lead";
 const CLIENT_PAGES=["home","portfolio","about","prices","contacts","privacy"];
 const STATUSES=[
  ["new","Новая"],["contact","Связались"],["measure","Замер"],["design","Дизайн-проект"],["repair","Ремонт / реализация"],["done","Сдан"],["lost","Отказ"]];
@@ -1362,7 +1364,7 @@ function openProject(id){
 function formHTML(where,tierId,purpose){
  if(clientState.formSent&&where==="inline")return '<div class="success"><b>Заявка принята.</b><br>'+(isOnline()?'Менеджер свяжется с вами в течение 15 минут.':'Сейчас нерабочее время — менеджер свяжется с вами утром, с 8:30.')+' Номер заявки: '+esc(clientState.lastId||"")+'</div><button class="btn ghost sm" style="margin-top:12px" data-act="newForm">Отправить ещё одну</button>';
  const p=where;
- return '<form data-form="'+p+'">'+(purpose==="academy"?'<input type="hidden" name="purpose" value="academy"><h3 style="font-size:24px;margin-bottom:16px">Заявка на обучение</h3>':'<h3 style="font-size:24px;margin-bottom:16px">Оставить заявку</h3>')+
+ return '<form data-form="'+p+'"><input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">'+(purpose==="academy"?'<input type="hidden" name="purpose" value="academy"><h3 style="font-size:24px;margin-bottom:16px">Заявка на обучение</h3>':'<h3 style="font-size:24px;margin-bottom:16px">Оставить заявку</h3>')+
  '<div class="row2"><div class="field"><label for="'+p+'-name">Имя</label><input id="'+p+'-name" name="name" required autocomplete="name"></div>'+
  '<div class="field"><label for="'+p+'-phone">Телефон</label><input id="'+p+'-phone" name="phone" required type="tel" placeholder="+7" autocomplete="tel"></div></div>'+
  (purpose==="academy"?'':'<div class="row2"><div class="field"><label for="'+p+'-type">Объект</label><select id="'+p+'-type" name="type">'+OBJ_TYPES.map(t=>'<option'+(t===clientState.calcType?' selected':'')+'>'+t+'</option>').join("")+'</select></div>'+
@@ -1373,6 +1375,29 @@ function formHTML(where,tierId,purpose){
  '<div style="margin-bottom:14px">'+consentLabel(p+'-ok')+'</div>'+
  '<button class="btn" type="submit">Отправить заявку</button></form>';
 }
+function leadPayload(l,extra){
+ const tier=(S.site.prices||[]).find(x=>x.id===l.tier);
+ return Object.assign({id:String(l.id||"").toUpperCase(),name:l.name,phone:l.phone,type:l.type,area:l.area||0,
+  tier:l.tier==="academy"?"Обучение":(tier?tier.name:(l.tier||"")),comment:l.comment||"",
+  source:SOURCES[l.source]||l.source||"",campaign:l.campaign?((S.campaigns.find(c=>c.id===l.campaign)||{}).name||l.campaign):"",
+  page:location.pathname+location.hash},extra||{});
+}
+const LQ="pi-lead-queue";
+function leadQueue(){try{return JSON.parse(localStorage.getItem(LQ)||"[]")}catch(e){return[]}}
+function leadQueueSet(q){try{q.length?localStorage.setItem(LQ,JSON.stringify(q.slice(-10))):localStorage.removeItem(LQ)}catch(e){}}
+function sendToBot(payload){
+ if(!LEAD_ENDPOINT)return Promise.resolve(false);
+ return fetch(LEAD_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload),keepalive:true})
+  .then(r=>r.ok||r.status===400).catch(()=>false);
+}
+function botLead(payload){
+ sendToBot(payload).then(ok=>{if(!ok&&LEAD_ENDPOINT){const q=leadQueue();if(!q.some(x=>x.id===payload.id))q.push(payload);leadQueueSet(q)}});
+}
+function botRetry(){
+ const q=leadQueue();if(!q.length||!LEAD_ENDPOINT)return;
+ Promise.all(q.map(x=>sendToBot(x).then(ok=>ok?null:x))).then(r=>leadQueueSet(r.filter(Boolean)));
+}
+setTimeout(botRetry,3000);
 function submitLead(form,where){
  const f=new FormData(form);
  const promo=String(f.get("promo")||"").trim().toUpperCase();
@@ -1385,6 +1410,8 @@ function submitLead(form,where){
  if(ref){const r=S.refs.find(x=>x.code===ref);if(r)r.leads++}
  const isAc=f.get("purpose")==="academy";
  const l={id:uid(),date:new Date().toISOString(),consent:{at:new Date().toISOString(),v:POLICY_V},name:String(f.get("name")).trim(),phone:String(f.get("phone")).trim(),type:isAc?"Обучение":f.get("type"),area:isAc?0:(+f.get("area")||0),tier:isAc?"academy":f.get("tier"),comment:String(f.get("comment")||"").trim()+(promo?" (промокод "+promo+")":""),source,campaign,ref,status:"new",manager:"",notes:[]};
+ if(String(f.get("website")||""))return;
+ botLead(leadPayload(l,{promo}));
  S.leads.unshift(l);feedAdd("visit","Новая заявка с сайта: "+l.name+", "+l.type+(l.area?", "+l.area+" м²":""));save();
  clientState.formSent=true;clientState.lastId=l.id.toUpperCase();clientState.fromCalc=false;
  if(where==="modal"){layer.innerHTML='<div class="modal-bg" data-act="bgclose"><div class="modal"><button class="x" data-act="close" aria-label="Закрыть">×</button><div class="success"><b>Заявка принята.</b><br>'+(isOnline()?'Мы свяжемся с вами в WhatsApp в течение 15 минут.':'Сейчас нерабочее время — мы ответим вам в WhatsApp утром, с 8:30.')+' Номер заявки: '+esc(clientState.lastId)+'</div></div></div>';return}
@@ -2377,7 +2404,7 @@ function twFinish(){
  if(wantD||!wantR){lines.push("• Дизайн-проект: ~"+money(design));tot+=design}
  if(wantR){lines.push("• Ремонт, работы: ~"+money(work));lines.push("• Черновые материалы: ~"+money(mat));lines.push("• Чистовые материалы и мебель: ~"+money(fin));tot+=work+mat+fin}
  const summary="Здравствуйте! Я "+a.name+". "+a.type+", "+area+" м², "+a.place+", состояние: "+a.cond.toLowerCase()+". Нужно: "+a.need.toLowerCase()+". Старт: "+a.when.toLowerCase()+". Ориентир с сайта: от "+money(tot)+".";
- const okd=/^Согласен/.test(a.ok||"");if(okd)try{S.leads.unshift({id:uid(),date:new Date().toISOString(),consent:{at:new Date().toISOString(),v:POLICY_V},name:a.name,phone:"WhatsApp",type:a.type,area:area,tier:wantR?"real":"design",comment:"Анкета Твикса: "+a.place+", "+a.cond+", "+a.need+", старт: "+a.when,source:"twiks",campaign:"",ref:"",status:"new",manager:"",notes:[]});save()}catch(e){}
+ const okd=/^Согласен/.test(a.ok||"");if(okd)try{const _tl={id:uid(),date:new Date().toISOString(),consent:{at:new Date().toISOString(),v:POLICY_V},name:a.name,phone:"WhatsApp",type:a.type,area:area,tier:wantR?"real":"design",comment:"Анкета Твикса: "+a.place+", "+a.cond+", "+a.need+", старт: "+a.when,source:"twiks",campaign:"",ref:"",status:"new",manager:"",notes:[]};botLead(leadPayload(_tl,{phone:"нет, клиент пишет в WhatsApp",comment:_tl.comment+". Ориентир: от "+money(tot)}));S.leads.unshift(_tl);save()}catch(e){}
  twSay(["Спасибо, "+a.name+"! Ориентир: "+a.type.toLowerCase()+", "+area+" м²",lines.join("\n"),"Итого от "+money(tot)+". Точную смету дизайнер посчитает после обмера.","Передаю вас в WhatsApp, все ответы уже будут в сообщении."],[]);
  setTimeout(()=>{twMsg('<a class="tw-wa" href="'+esc("https://wa.me/"+(S.site.whatsapp||"")+"?text="+encodeURIComponent(summary))+'" target="_blank" rel="noopener">Продолжить в WhatsApp</a><small>'+esc(S.site.phone)+'</small>',"bot",true);twChips(["В начало"])},3600);
 }
