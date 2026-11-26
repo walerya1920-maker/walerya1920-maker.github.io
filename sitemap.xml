@@ -1,9 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://walerya1920-maker.github.io/</loc>
-    <lastmod>2026-11-23</lastmod>
+    <loc>https://int.parametricpro.kz/</loc>
+    <lastmod>2026-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image><image:loc>https://int.parametricpro.kz/img/hero.jpg</image:loc><image:title>Дизайн интерьера в Алматы — Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/sig81-1.jpg</image:loc><image:title>Rams Signature — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/sig81-2.jpg</image:loc><image:title>Rams Signature — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/sig81-3.jpg</image:loc><image:title>Rams Signature — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/sig82-1.jpg</image:loc><image:title>Rams Signature — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/sig82-2.jpg</image:loc><image:title>Rams Signature — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/sig82-3.jpg</image:loc><image:title>Rams Signature — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/house300-1.jpg</image:loc><image:title>Dom — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/house300-2.jpg</image:loc><image:title>Dom — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/house300-3.jpg</image:loc><image:title>Dom — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/zhaiyk96-1.jpg</image:loc><image:title>Zhaiyk — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/zhaiyk96-2.jpg</image:loc><image:title>Zhaiyk — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/zhaiyk96-3.jpg</image:loc><image:title>Zhaiyk — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/forum70-1.jpg</image:loc><image:title>Forum Plus — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/forum70-2.jpg</image:loc><image:title>Forum Plus — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/forum70-3.jpg</image:loc><image:title>Forum Plus — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/bestulga90-1.jpg</image:loc><image:title>Bes Tulga — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/bestulga90-2.jpg</image:loc><image:title>Bes Tulga — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/bestulga90-3.jpg</image:loc><image:title>Bes Tulga — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/dreamcity-1.jpg</image:loc><image:title>Dream City — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/dreamcity-2.jpg</image:loc><image:title>Dream City — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/dreamcity-3.jpg</image:loc><image:title>Dream City — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/mega110-1.jpg</image:loc><image:title>Mega Towers — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/mega110-2.jpg</image:loc><image:title>Mega Towers — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/mega110-3.jpg</image:loc><image:title>Mega Towers — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/sig53-1.jpg</image:loc><image:title>Rams Signature — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/sig53-2.jpg</image:loc><image:title>Rams Signature — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/sig53-3.jpg</image:loc><image:title>Rams Signature — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/gulnur54-1.jpg</image:loc><image:title>Rams Signature — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/gulnur54-2.jpg</image:loc><image:title>Rams Signature — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/gulnur54-3.jpg</image:loc><image:title>Rams Signature — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/sayakhat-1.jpg</image:loc><image:title>Rams Sayakhat — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/sayakhat-2.jpg</image:loc><image:title>Rams Sayakhat — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/sayakhat-3.jpg</image:loc><image:title>Rams Sayakhat — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/aqzam-1.jpg</image:loc><image:title>Aqzam — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/aqzam-2.jpg</image:loc><image:title>Aqzam — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/aqzam-3.jpg</image:loc><image:title>Aqzam — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/green-1.jpg</image:loc><image:title>Green City — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/green-2.jpg</image:loc><image:title>Green City — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/green-3.jpg</image:loc><image:title>Green City — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/qonaev-1.jpg</image:loc><image:title>NJ Qurylys — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/qonaev-2.jpg</image:loc><image:title>NJ Qurylys — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/qonaev-3.jpg</image:loc><image:title>NJ Qurylys — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/nomad-1.jpg</image:loc><image:title>Nomad Escape Bathhouse — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/nomad-2.jpg</image:loc><image:title>Nomad Escape Bathhouse — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/nomad-3.jpg</image:loc><image:title>Nomad Escape Bathhouse — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/rest-1.jpg</image:loc><image:title>Restaurant — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/off62-1.jpg</image:loc><image:title>Office 62 — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/off62-2.jpg</image:loc><image:title>Office 62 — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/off62-3.jpg</image:loc><image:title>Office 62 — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/delice-1.jpg</image:loc><image:title>Delice Coffee House — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/toy-1.jpg</image:loc><image:title>Toikhana Banquet Hall — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/toy-2.jpg</image:loc><image:title>Toikhana Banquet Hall — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/toy-3.jpg</image:loc><image:title>Toikhana Banquet Hall — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/luky-1.jpg</image:loc><image:title>Luky Bar — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/msk-1.jpg</image:loc><image:title>Office, Moscow — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/msk-2.jpg</image:loc><image:title>Office, Moscow — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/msk-3.jpg</image:loc><image:title>Office, Moscow — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/oyna-1.jpg</image:loc><image:title>Oyna Kindergarten — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/oyna-2.jpg</image:loc><image:title>Oyna Kindergarten — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/oyna-3.jpg</image:loc><image:title>Oyna Kindergarten — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/brut-1.jpg</image:loc><image:title>ЖК Брют Резидентс, Россия — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/brut-2.jpg</image:loc><image:title>ЖК Брют Резидентс, Россия — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/brut-3.jpg</image:loc><image:title>ЖК Брют Резидентс, Россия — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/kaskada-1.jpg</image:loc><image:title>ЖК Каскада, Россия — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/kaskada-2.jpg</image:loc><image:title>ЖК Каскада, Россия — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/kaskada-3.jpg</image:loc><image:title>ЖК Каскада, Россия — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/munavvar-1.jpg</image:loc><image:title>ЖК Муннавар, Ташкент — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/munavvar-2.jpg</image:loc><image:title>ЖК Муннавар, Ташкент — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/munavvar-3.jpg</image:loc><image:title>ЖК Муннавар, Ташкент — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/sylvie-1.jpg</image:loc><image:title>Кондитерская Sylvie — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/sylvie-2.jpg</image:loc><image:title>Кондитерская Sylvie — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/sylvie-3.jpg</image:loc><image:title>Кондитерская Sylvie — дизайн интерьера Parametric Interior</image:title></image:image>
+    <image:image><image:loc>https://int.parametricpro.kz/img/cafe-1.jpg</image:loc><image:title>Café — дизайн интерьера Parametric Interior</image:title></image:image>
   </url>
 </urlset>
