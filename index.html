@@ -1386,13 +1386,18 @@ function journalLayout(keep){
  const hs=cards.map(c=>{const cl=c.cloneNode(true);probe.appendChild(cl);const h=cl.getBoundingClientRect().height;probe.removeChild(cl);return h});
  const gap=14,base=jPer===2?560:540,mx=Math.max(...hs),sum=hs.reduce((a,x)=>a+x,0)+gap*(hs.length-1),unit=jCols*jPer;
  /* колонки заполняются «сначала самые высокие, в первую подходящую» — ровно, без дыр между отзывами */
- const pack=H=>{const ord=hs.map((x,i)=>i).sort((a,b)=>hs[b]-hs[a]),bins=[];ord.forEach(i=>{const t=bins.find(p=>p.h+gap+hs[i]<=H);if(t){t.items.push(i);t.h+=gap+hs[i]}else bins.push({items:[i],h:hs[i]})});return bins};
+ /* отзывы на других языках (с переводом) — всегда на первом развороте */
+ const pri=cards.map((c,i)=>c.dataset.lang?i:-1).filter(i=>i>=0),first=jCols*jPer;
+ const pack=H=>{const bins=[],put=(i,lim)=>{const t=bins.slice(0,lim).find(p=>p.h+gap+hs[i]<=H);if(t){t.items.push(i);t.h+=gap+hs[i];return true}if(bins.length<lim){bins.push({items:[i],h:hs[i]});return true}return false};
+  pri.slice().sort((a,b)=>hs[b]-hs[a]).forEach(i=>{if(!put(i,first))put(i,Infinity)});
+  hs.map((x,i)=>i).filter(i=>!pri.includes(i)).sort((a,b)=>hs[b]-hs[a]).forEach(i=>put(i,Infinity));return bins};
  const Hmax=Math.max(mx,Math.min(jPer===2?620:600,Math.round(window.innerHeight*0.72)));
  let n=Math.ceil(pack(Hmax).length/unit)*unit,lo=mx,hi=Hmax;
  if(n>unit&&pack(Hmax*1.15).length<=n-unit){n-=unit;hi=Math.round(Hmax*1.15)}
  while(hi-lo>3){const mid=(lo+hi)/2;if(pack(mid).length<=n)hi=mid;else lo=mid}
  jH=Math.ceil(hi);
- const bins=pack(jH).map(p=>p.items.sort((a,b)=>a-b)).sort((a,b)=>a[0]-b[0]);
+ const bins0=pack(jH).map(p=>p.items.sort((a,b)=>a-b)),hasP=b=>b.some(i=>pri.includes(i));
+ const bins=bins0.filter(hasP).concat(bins0.filter(b=>!hasP(b)).sort((a,b)=>a[0]-b[0]));
  jPages=[];for(let i=0;i<bins.length;i+=jCols)jPages.push(bins.slice(i,i+jCols).map(col=>col.map(k=>cards[k].outerHTML)));
  if(!keep)jPage=0;jPage=Math.min(jPage-(jPage%jPer),Math.max(0,jPages.length-1));jPage-=jPage%jPer;journalShow(0);
 }
@@ -1406,8 +1411,8 @@ function journalShow(dir){
  const [pv,nx]=j.querySelectorAll(".jarrow");pv.disabled=jPage===0;nx.disabled=jPage+jPer>=total;
 }
 function journalStep(d,auto){const n=jPage+d*jPer;if(!auto)jLast=Date.now();if(n<0||n>=jPages.length)return;jPage=n;journalShow(d)}
-/* автолистание раз в минуту: только когда журнал на экране, вкладка открыта и посетитель не листает сам и не держит курсор на журнале */
-const J_AUTO=60000;let jLast=Date.now(),jHover=false;
+/* автолистание каждые 5 секунд, как визуализации на главном экране: только когда журнал на экране, вкладка открыта и посетитель не листает сам и не держит курсор на журнале */
+const J_AUTO=5000;let jLast=Date.now(),jHover=false;
 document.addEventListener("mouseover",e=>{jHover=!!(e.target.closest&&e.target.closest("#journal"))});
 setInterval(()=>{const j=document.getElementById("journal");if(!j||!jPages.length||document.hidden||jHover)return;const r=j.getBoundingClientRect();if(r.bottom<80||r.top>window.innerHeight-80){jLast=Date.now();return}if(Date.now()-jLast<J_AUTO)return;jLast=Date.now();if(jPage+jPer>=jPages.length){jPage=0;journalShow(-1)}else journalStep(1,true)},1000);
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>journalLayout(true));
@@ -1467,7 +1472,7 @@ function reviewsHTML(){
  return '<section class="block alt" id="reviews"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">Обзоры и отзывы</div><h2>Живые объекты и мнения клиентов</h2></div><button class="btn ghost" data-act="revForm">Оставить отзыв</button></div>'+
  '<div class="filters" role="tablist"><button role="tab" class="chip'+(t==="video"?' on':'')+'" data-act="revTab" data-id="video">Видеообзоры объектов · '+vids.length+'</button><button role="tab" class="chip'+(t==="text"?' on':'')+'" data-act="revTab" data-id="text">Отзывы клиентов · '+pub.length+'</button></div>'+
  (t==="video"?(vids.length?'<div class="vgrid">'+vids.map(vCard).join("")+'</div><p class="muted" style="font-size:13px;margin-top:14px">Видео открываются в Instagram.</p>':'<p class="muted">Видеообзоры скоро появятся.</p>')
- :(pub.length?'<div class="journal" id="journal"><div class="jbook" aria-live="polite"></div><div class="jnav"><button class="jarrow" data-act="jstep" data-id="-1" aria-label="Предыдущая страница">‹</button><span class="jcount"></span><button class="jarrow" data-act="jstep" data-id="1" aria-label="Следующая страница">›</button></div><div class="jsrc" hidden>'+pub.map(r=>r.chat?'<figure class="chat"><div class="chat-top"><i>👤</i><div>'+esc(r.name)+'<span>WhatsApp</span></div></div><div class="bubble">'+esc(r.text)+'<time>'+esc((r.date||"").slice(11,16))+'</time></div>'+(r.tr?'<div class="tr"><b>Перевод:</b> '+esc(r.tr)+'</div>':'')+'</figure>':'<figure class="rcard">'+stars(r.rating)+'<blockquote>'+esc(r.text)+'</blockquote><figcaption><b>'+esc(r.name)+'</b>'+(r.object?'<span>'+esc(r.object)+'</span>':'')+'</figcaption></figure>').join("")+'</div></div>'
+ :(pub.length?'<div class="journal" id="journal"><div class="jbook" aria-live="polite"></div><div class="jnav"><button class="jarrow" data-act="jstep" data-id="-1" aria-label="Предыдущая страница">‹</button><span class="jcount"></span><button class="jarrow" data-act="jstep" data-id="1" aria-label="Следующая страница">›</button></div><div class="jsrc" hidden>'+pub.map(r=>r.chat?'<figure class="chat"'+(r.tr?' data-lang="kk"':'')+'><div class="chat-top"><i>👤</i><div>'+esc(r.name)+'<span>WhatsApp</span></div></div><div class="bubble">'+esc(r.text)+'<time>'+esc((r.date||"").slice(11,16))+'</time></div>'+(r.tr?'<div class="tr"><b>Перевод:</b> '+esc(r.tr)+'</div>':'')+'</figure>':'<figure class="rcard">'+stars(r.rating)+'<blockquote>'+esc(r.text)+'</blockquote><figcaption><b>'+esc(r.name)+'</b>'+(r.object?'<span>'+esc(r.object)+'</span>':'')+'</figcaption></figure>').join("")+'</div></div>'
    :'<div class="empty"><p>Здесь будут отзывы наших клиентов. Если мы уже сделали ваш интерьер, расскажите, как вам результат.</p><button class="btn" data-act="revForm">Написать отзыв</button></div>'))+
  '</div></section>';
 }
