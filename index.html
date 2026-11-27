@@ -1407,7 +1407,11 @@ function journalShow(dir){
  j.querySelector(".jcount").textContent=(jPer===2&&last>jPage+1?'Стр. '+(jPage+1)+'–'+last:'Стр. '+(jPage+1))+' из '+total;
  const [pv,nx]=j.querySelectorAll(".jarrow");pv.disabled=jPage===0;nx.disabled=jPage+jPer>=total;
 }
-function journalStep(d){const n=jPage+d*jPer;if(n<0||n>=jPages.length)return;jPage=n;journalShow(d)}
+function journalStep(d,auto){const n=jPage+d*jPer;if(!auto)jLast=Date.now();if(n<0||n>=jPages.length)return;jPage=n;journalShow(d)}
+/* автолистание раз в минуту: только когда журнал на экране, вкладка открыта и посетитель не листает сам и не держит курсор на журнале */
+const J_AUTO=60000;let jLast=Date.now(),jHover=false;
+document.addEventListener("mouseover",e=>{jHover=!!(e.target.closest&&e.target.closest("#journal"))});
+setInterval(()=>{const j=document.getElementById("journal");if(!j||!jPages.length||document.hidden||jHover)return;const r=j.getBoundingClientRect();if(r.bottom<80||r.top>window.innerHeight-80){jLast=Date.now();return}if(Date.now()-jLast<J_AUTO)return;jLast=Date.now();if(jPage+jPer>=jPages.length){jPage=0;journalShow(-1)}else journalStep(1,true)},1000);
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>journalLayout(true));
 let jResizeT;window.addEventListener("resize",()=>{clearTimeout(jResizeT);jResizeT=setTimeout(()=>journalLayout(true),200)});
 document.addEventListener("keydown",e=>{if(!document.getElementById("journal")||/INPUT|TEXTAREA|SELECT/.test((e.target.tagName||"")))return;const j=document.getElementById("journal").getBoundingClientRect();if(j.bottom<0||j.top>window.innerHeight)return;if(e.key==="ArrowRight")journalStep(1);else if(e.key==="ArrowLeft")journalStep(-1)});
