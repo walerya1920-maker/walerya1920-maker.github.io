@@ -1301,7 +1301,7 @@ const BA_SLIDES=[
 let prI=0,prTick=0,prMuted=true;
 function secBA(){const L=BA_SLIDES,one=L.length<2;if(prI>=L.length)prI=0;
  const col=(arr,cls)=>'<figure class="pr-r'+cls+'">'+arr.map((u,k)=>'<img src="'+u+'" alt="3D-визуализация проекта" loading="lazy"'+(k?'':' class="on"')+'>').join("")+'<span class="pr-tag">3D-проект</span></figure>';
- return '<section class="block" id="s-ba"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">До и после</div><h2>Проект = реальность</h2></div><span class="muted">3D-визуализация и готовый объект с авторским надзором</span></div>'+
+ return '<section class="block" id="s-ba"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">До и после</div><h2>Проект = реальность</h2></div><span class="muted">Самые последние наши объекты</span></div>'+
  '<div class="pr" id="pr">'+L.map((v,i)=>'<div class="pr-slide'+(i===prI?' on':'')+'" data-i="'+i+'"><figure class="pr-v"><video '+(i===prI?'src':'data-src')+'="'+v.video+'" poster="'+v.poster+'" muted playsinline preload="'+(i===prI?'metadata':'none')+'"'+(one?' loop':'')+' aria-label="Видео: проект и реальность, '+esc(v.title)+'"></video><span class="pr-tag">Реальность</span><button class="pr-snd" data-act="prSound" aria-label="Звук">'+prSndIco()+'</button></figure>'+col(v.a,'')+col(v.b,' pr-b')+'</div>').join("")+
  '<div class="pr-foot">'+L.map((v,i)=>'<button class="pr-cap'+(i===prI?' on':'')+'" data-act="proj" data-id="'+v.proj+'"><b>'+esc(v.title)+'</b><span>'+esc(v.meta)+' · смотреть проект →</span></button>').join("")+
  (one?'':'<div class="pr-dots">'+L.map((v,i)=>'<button class="pr-dot'+(i<prI?' done':'')+(i===prI?' on':'')+'" data-act="prGo" data-id="'+i+'" aria-label="'+esc(v.title)+'"><i></i></button>').join("")+'</div>')+
