@@ -683,6 +683,34 @@ a.btn{text-decoration:none}
 @media (max-width:520px){.tw{right:14px;bottom:14px}.tw-panel{position:fixed;left:8px;right:8px;bottom:92px;width:auto;height:calc(100vh - 110px)}.tw-hello{right:76px;width:180px}}
 @media (prefers-reduced-motion:reduce){.tw-fab::after,.tw-m,.tw-panel,.tw-hello{animation:none}}
 /* отзывы как сообщения */
+.journal{margin-top:8px}
+.jbook{display:grid;grid-template-columns:1fr 1fr;gap:0;background:#ece5d8;border-radius:6px;box-shadow:0 30px 60px rgba(0,0,0,.35),inset 0 0 0 1px rgba(0,0,0,.08);overflow:hidden;perspective:1800px}
+.jpage{position:relative;padding:26px 26px 34px;background:linear-gradient(#f6f1e7,#f1eadc);color:#3b3326}
+.jpage.left{background:linear-gradient(90deg,#f6f1e7 0,#f3ecdf 88%,#ddd3c1 100%)}
+.jpage.right{background:linear-gradient(90deg,#d9cfbc 0,#f1eadc 10%,#f6f1e7 100%)}
+.jpage.single{grid-column:1/-1}
+.jhead{font-family:var(--display);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#8a7c64;border-bottom:1px solid rgba(90,75,50,.18);padding-bottom:10px;margin-bottom:16px}
+.jpage.right .jhead{text-align:right}
+.jin{display:block}
+.jcols{display:grid;gap:14px;align-items:start}
+.jcol{display:flex;flex-direction:column;gap:14px;min-width:0}
+.jcol>figure{margin:0}
+.jin .chat{box-shadow:0 6px 16px rgba(40,30,10,.18);padding:14px 14px 12px}
+.jin .chat-top{margin-bottom:10px}
+.jin .rcard{margin:0}
+.jnum{position:absolute;bottom:10px;left:0;right:0;text-align:center;font-size:12px;color:#8a7c64;font-family:var(--display)}
+.jend{margin:auto;text-align:center;color:#8a7c64;font-style:italic;padding-top:40%}
+.jnav{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:18px}
+.jarrow{width:44px;height:44px;border-radius:50%;border:1px solid currentColor;background:transparent;color:inherit;font-size:24px;line-height:1;cursor:pointer}
+.jarrow:disabled{opacity:.3;cursor:default}
+.jcount{font-size:14px;opacity:.8;min-width:130px;text-align:center}
+.jbook.turn-next .jpage{animation:jnext .45s ease}
+.jbook.turn-prev .jpage{animation:jprev .45s ease}
+.jbook.turn-next .jpage.left,.jbook.turn-prev .jpage.right{animation-delay:.05s}
+@keyframes jnext{from{transform:rotateY(-14deg) translateX(30px);opacity:.2;transform-origin:left}to{transform:none;opacity:1}}
+@keyframes jprev{from{transform:rotateY(14deg) translateX(-30px);opacity:.2;transform-origin:right}to{transform:none;opacity:1}}
+@media (max-width:900px){.jbook{grid-template-columns:1fr}.jpage{padding:20px 16px 32px}}
+@media (prefers-reduced-motion:reduce){.jbook .jpage{animation:none!important}}
 .chatgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:start}
 @media (max-width:900px){.chatgrid{grid-template-columns:1fr}}
 .chat{background:#0b141a;border-radius:18px;padding:18px 16px 14px;position:relative;box-shadow:0 14px 40px rgba(0,0,0,.25)}
@@ -1349,6 +1377,42 @@ function secAcademy(){const s=S.site,a=s.academy||{};return '<section class="blo
  '<div class="about-pic"><img src="img/qonaev-3.jpg" alt="Рабочее место дизайнера"></div></div></section>'}
 function secCta(){const s=S.site;return '<section class="block cta-strip"><div class="wrap"><div><h2>Обсудим ваш объект</h2><p class="muted">Ответим в WhatsApp: '+esc(s.phone)+'</p></div><div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn" href="https://wa.me/'+esc(s.whatsapp)+'">Написать в WhatsApp</a><button class="btn ghost" data-act="openForm">Оставить заявку</button></div></div></section>'}
 function pageHead(t,sub){return '<section class="page-head"><div class="wrap"><div class="eyebrow">'+esc(t[0])+'</div><h1>'+esc(t[1])+'</h1>'+(sub?'<p class="lead">'+esc(sub)+'</p>':'')+'</div></section>'}
+/* Журнал отзывов: раскладка по реальной высоте карточек, разворот 2 страницы (на телефоне 1), листание */
+let jPage=0,jPages=[],jPer=2,jH=0,jCols=2;
+function journalLayout(keep){
+ const j=document.getElementById("journal");if(!j)return;
+ const src=j.querySelector(".jsrc"),book=j.querySelector(".jbook");const cards=[...src.children];if(!cards.length)return;
+ jPer=window.innerWidth>900?2:1;jCols=1;
+ book.innerHTML='<div class="jpage"><div class="jin"><div class="jcols" style="grid-template-columns:repeat('+jCols+',1fr)"><div class="jcol"></div></div></div></div>';
+ const probe=book.querySelector(".jcol");
+ const hs=cards.map(c=>{const cl=c.cloneNode(true);probe.appendChild(cl);const h=cl.getBoundingClientRect().height;probe.removeChild(cl);return h});
+ const gap=14,base=jPer===2?560:540,mx=Math.max(...hs),sum=hs.reduce((a,x)=>a+x,0)+gap*(hs.length-1),unit=jCols*jPer;
+ /* колонки заполняются «сначала самые высокие, в первую подходящую» — ровно, без дыр между отзывами */
+ const pack=H=>{const ord=hs.map((x,i)=>i).sort((a,b)=>hs[b]-hs[a]),bins=[];ord.forEach(i=>{const t=bins.find(p=>p.h+gap+hs[i]<=H);if(t){t.items.push(i);t.h+=gap+hs[i]}else bins.push({items:[i],h:hs[i]})});return bins};
+ const Hmax=Math.max(mx,Math.min(jPer===2?620:600,Math.round(window.innerHeight*0.72)));
+ let n=Math.ceil(pack(Hmax).length/unit)*unit,lo=mx,hi=Hmax;
+ if(n>unit&&pack(Hmax*1.15).length<=n-unit){n-=unit;hi=Math.round(Hmax*1.15)}
+ while(hi-lo>3){const mid=(lo+hi)/2;if(pack(mid).length<=n)hi=mid;else lo=mid}
+ jH=Math.ceil(hi);
+ const bins=pack(jH).map(p=>p.items.sort((a,b)=>a-b)).sort((a,b)=>a[0]-b[0]);
+ jPages=[];for(let i=0;i<bins.length;i+=jCols)jPages.push(bins.slice(i,i+jCols).map(col=>col.map(k=>cards[k].outerHTML)));
+ if(!keep)jPage=0;jPage=Math.min(jPage-(jPage%jPer),Math.max(0,jPages.length-1));jPage-=jPage%jPer;journalShow(0);
+}
+function journalShow(dir){
+ const j=document.getElementById("journal");if(!j||!jPages.length)return;const book=j.querySelector(".jbook");
+ const sp=jPages.slice(jPage,jPage+jPer);while(sp.length<jPer&&jPer===2)sp.push(null);
+ book.innerHTML=sp.map((pg,k)=>'<div class="jpage '+(jPer===2?(k?'right':'left'):'single')+'"><div class="jhead">'+(k||jPer===1?'Отзывы клиентов':'Parametric Interior')+'</div><div class="jin" style="min-height:'+jH+'px">'+(pg?'<div class="jcols" style="grid-template-columns:repeat('+jCols+',1fr)">'+pg.map(col=>'<div class="jcol">'+col.join("")+'</div>').join("")+'</div>':'<p class="jend">Спасибо, что выбираете нас</p>')+'</div><div class="jnum">'+(pg?jPage+k+1:'')+'</div></div>').join("");
+ if(dir){book.classList.remove("turn-next","turn-prev");void book.offsetWidth;book.classList.add(dir>0?"turn-next":"turn-prev")}
+ const total=jPages.length,last=Math.min(total,jPage+jPer);
+ j.querySelector(".jcount").textContent=(jPer===2&&last>jPage+1?'Стр. '+(jPage+1)+'–'+last:'Стр. '+(jPage+1))+' из '+total;
+ const [pv,nx]=j.querySelectorAll(".jarrow");pv.disabled=jPage===0;nx.disabled=jPage+jPer>=total;
+}
+function journalStep(d){const n=jPage+d*jPer;if(n<0||n>=jPages.length)return;jPage=n;journalShow(d)}
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>journalLayout(true));
+let jResizeT;window.addEventListener("resize",()=>{clearTimeout(jResizeT);jResizeT=setTimeout(()=>journalLayout(true),200)});
+document.addEventListener("keydown",e=>{if(!document.getElementById("journal")||/INPUT|TEXTAREA|SELECT/.test((e.target.tagName||"")))return;const j=document.getElementById("journal").getBoundingClientRect();if(j.bottom<0||j.top>window.innerHeight)return;if(e.key==="ArrowRight")journalStep(1);else if(e.key==="ArrowLeft")journalStep(-1)});
+let jTx=null;document.addEventListener("touchstart",e=>{if(e.target.closest&&e.target.closest(".jbook"))jTx=e.touches[0].clientX},{passive:true});
+document.addEventListener("touchend",e=>{if(jTx===null)return;const dx=e.changedTouches[0].clientX-jTx;jTx=null;if(Math.abs(dx)>50)journalStep(dx<0?1:-1)},{passive:true});
 function renderClient(){
  const s=S.site,sec=s.sections,pg=route;
  const bar=activeCamps("bar")[0]||(nyOn()?NY_BAR:null),banner=pg==="home"?activeCamps("banner")[0]:null;
@@ -1386,6 +1450,7 @@ function renderClient(){
  '<div><h4>Направления</h4><span>'+esc(s.instaArch)+' — архитектура</span><br><span>Мебель под заказ</span></div></div>'+
  '<div class="copy"><span>© 2026 '+esc(s.brand)+' Interior · <button class="lnk" data-act="page" data-id="privacy" style="display:inline;padding:0">Политика конфиденциальности</button></span><span>Архитектура · дизайн · инжиниринг</span></div></div></footer>';
  save();
+ setTimeout(()=>journalLayout(true),0);
  const pop=activeCamps("popup")[0];
  if(pop&&!popupShown){popupShown=true;setTimeout(()=>{if(!CLIENT_PAGES.includes(route))return;pop.views++;save();
   showModal('<div class="modal promo"><button class="x" data-act="close" aria-label="Закрыть">×</button><div class="eyebrow">Специальное предложение</div><h3 style="font-size:30px;margin:10px 0 10px">'+esc(pop.title)+'</h3><p style="opacity:.9">'+esc(pop.text)+'</p>'+(pop.promo?'<p>Промокод: <b>'+esc(pop.promo)+'</b></p>':'')+'<button class="btn" data-act="campClick" data-id="'+pop.id+'">'+esc(pop.cta)+'</button></div>')},1500)}
@@ -1400,7 +1465,7 @@ function reviewsHTML(){
  return '<section class="block alt" id="reviews"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">Обзоры и отзывы</div><h2>Живые объекты и мнения клиентов</h2></div><button class="btn ghost" data-act="revForm">Оставить отзыв</button></div>'+
  '<div class="filters" role="tablist"><button role="tab" class="chip'+(t==="video"?' on':'')+'" data-act="revTab" data-id="video">Видеообзоры объектов · '+vids.length+'</button><button role="tab" class="chip'+(t==="text"?' on':'')+'" data-act="revTab" data-id="text">Отзывы клиентов · '+pub.length+'</button></div>'+
  (t==="video"?(vids.length?'<div class="vgrid">'+vids.map(vCard).join("")+'</div><p class="muted" style="font-size:13px;margin-top:14px">Видео открываются в Instagram.</p>':'<p class="muted">Видеообзоры скоро появятся.</p>')
- :(pub.length?'<div class="chatgrid">'+pub.filter(r=>r.chat).map(r=>'<figure class="chat"><div class="chat-top"><i>👤</i><div>'+esc(r.name)+'<span>WhatsApp</span></div></div><div class="bubble">'+esc(r.text)+'<time>'+esc((r.date||"").slice(11,16))+'</time></div>'+(r.tr?'<div class="tr"><b>Перевод:</b> '+esc(r.tr)+'</div>':'')+'</figure>').join("")+'</div>'+(pub.some(r=>!r.chat)?'<div class="rgrid" style="margin-top:18px">'+pub.filter(r=>!r.chat).map(r=>'<figure class="rcard">'+stars(r.rating)+'<blockquote>'+esc(r.text)+'</blockquote><figcaption><b>'+esc(r.name)+'</b>'+(r.object?'<span>'+esc(r.object)+'</span>':'')+'</figcaption></figure>').join("")+'</div>':'')
+ :(pub.length?'<div class="journal" id="journal"><div class="jbook" aria-live="polite"></div><div class="jnav"><button class="jarrow" data-act="jstep" data-id="-1" aria-label="Предыдущая страница">‹</button><span class="jcount"></span><button class="jarrow" data-act="jstep" data-id="1" aria-label="Следующая страница">›</button></div><div class="jsrc" hidden>'+pub.map(r=>r.chat?'<figure class="chat"><div class="chat-top"><i>👤</i><div>'+esc(r.name)+'<span>WhatsApp</span></div></div><div class="bubble">'+esc(r.text)+'<time>'+esc((r.date||"").slice(11,16))+'</time></div>'+(r.tr?'<div class="tr"><b>Перевод:</b> '+esc(r.tr)+'</div>':'')+'</figure>':'<figure class="rcard">'+stars(r.rating)+'<blockquote>'+esc(r.text)+'</blockquote><figcaption><b>'+esc(r.name)+'</b>'+(r.object?'<span>'+esc(r.object)+'</span>':'')+'</figcaption></figure>').join("")+'</div></div>'
    :'<div class="empty"><p>Здесь будут отзывы наших клиентов. Если мы уже сделали ваш интерьер, расскажите, как вам результат.</p><button class="btn" data-act="revForm">Написать отзыв</button></div>'))+
  '</div></section>';
 }
@@ -1661,6 +1726,7 @@ document.addEventListener("click",e=>{
   case "cat":{clientState.cat=id;clientState.limit=route==="portfolio"?12:6;const y=window.scrollY;renderClient();window.scrollTo(0,y);break}
   case "dir":clientState.dir=id;clientState.cat="all";clientState.limit=route==="portfolio"?12:6;{const y=window.scrollY;renderClient();window.scrollTo(0,y)}break;
   case "dirGo":clientState.dir=id;clientState.cat="all";clientState.limit=12;go("portfolio");break;
+  case "jstep":journalStep(+id);break;
   case "revTab":clientState.revTab=id;{const y=window.scrollY;renderClient();window.scrollTo(0,y)}break;
   case "revForm":showModal(revFormHTML());break;
   case "revPub":case "revHide":{const r=S.site.reviews.find(x=>x.id===id);r.status=act==="revPub"?"published":"hidden";save();renderPanel();toast(act==="revPub"?"Отзыв опубликован":"Отзыв скрыт");break}
