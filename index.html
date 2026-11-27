@@ -684,32 +684,30 @@ a.btn{text-decoration:none}
 @media (prefers-reduced-motion:reduce){.tw-fab::after,.tw-m,.tw-panel,.tw-hello{animation:none}}
 /* отзывы как сообщения */
 .journal{margin-top:8px}
-.jbook{display:grid;grid-template-columns:1fr 1fr;gap:0;background:#ece5d8;border-radius:6px;box-shadow:0 30px 60px rgba(0,0,0,.35),inset 0 0 0 1px rgba(0,0,0,.08);overflow:hidden;perspective:1800px}
-.jpage{position:relative;padding:26px 26px 34px;background:linear-gradient(#f6f1e7,#f1eadc);color:#3b3326}
-.jpage.left{background:linear-gradient(90deg,#f6f1e7 0,#f3ecdf 88%,#ddd3c1 100%)}
-.jpage.right{background:linear-gradient(90deg,#d9cfbc 0,#f1eadc 10%,#f6f1e7 100%)}
+.jbook{display:grid;grid-template-columns:1fr 1fr;background:var(--paper);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.jpage{position:relative;padding:22px 22px 34px;background:transparent;color:var(--ink)}
+.jpage.right{border-left:1px solid var(--line)}
 .jpage.single{grid-column:1/-1}
-.jhead{font-family:var(--display);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#8a7c64;border-bottom:1px solid rgba(90,75,50,.18);padding-bottom:10px;margin-bottom:16px}
+.jhead{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);padding-bottom:10px;margin-bottom:16px;border-bottom:1px solid var(--line)}
 .jpage.right .jhead{text-align:right}
 .jin{display:block}
 .jcols{display:grid;gap:14px;align-items:start}
 .jcol{display:flex;flex-direction:column;gap:14px;min-width:0}
 .jcol>figure{margin:0}
-.jin .chat{box-shadow:0 6px 16px rgba(40,30,10,.18);padding:14px 14px 12px}
+.jin .chat{box-shadow:none;padding:14px 14px 12px;border-radius:12px}
 .jin .chat-top{margin-bottom:10px}
-.jin .rcard{margin:0}
-.jnum{position:absolute;bottom:10px;left:0;right:0;text-align:center;font-size:12px;color:#8a7c64;font-family:var(--display)}
-.jend{margin:auto;text-align:center;color:#8a7c64;font-style:italic;padding-top:40%}
+.jin .rcard{box-shadow:none}
+.jnum{position:absolute;bottom:10px;left:0;right:0;text-align:center;font-size:12px;color:var(--muted)}
+.jend{margin:auto;text-align:center;color:var(--muted);padding-top:40%}
 .jnav{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:18px}
 .jarrow{width:44px;height:44px;border-radius:50%;border:1px solid currentColor;background:transparent;color:inherit;font-size:24px;line-height:1;cursor:pointer}
 .jarrow:disabled{opacity:.3;cursor:default}
-.jcount{font-size:14px;opacity:.8;min-width:130px;text-align:center}
-.jbook.turn-next .jpage{animation:jnext .45s ease}
-.jbook.turn-prev .jpage{animation:jprev .45s ease}
-.jbook.turn-next .jpage.left,.jbook.turn-prev .jpage.right{animation-delay:.05s}
-@keyframes jnext{from{transform:rotateY(-14deg) translateX(30px);opacity:.2;transform-origin:left}to{transform:none;opacity:1}}
-@keyframes jprev{from{transform:rotateY(14deg) translateX(-30px);opacity:.2;transform-origin:right}to{transform:none;opacity:1}}
-@media (max-width:900px){.jbook{grid-template-columns:1fr}.jpage{padding:20px 16px 32px}}
+.jcount{font-size:14px;color:var(--muted);min-width:130px;text-align:center}
+.jbook.turn-next .jpage{animation:jnext .35s ease}
+.jbook.turn-prev .jpage{animation:jprev .35s ease}
+@keyframes jnext{from{transform:translateX(24px);opacity:0}to{transform:none;opacity:1}}
+@keyframes jprev{from{transform:translateX(-24px);opacity:0}to{transform:none;opacity:1}}
+@media (max-width:900px){.jbook{grid-template-columns:1fr}.jpage{padding:18px 14px 32px}.jpage.right{border-left:0}}
 @media (prefers-reduced-motion:reduce){.jbook .jpage{animation:none!important}}
 .chatgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:start}
 @media (max-width:900px){.chatgrid{grid-template-columns:1fr}}
