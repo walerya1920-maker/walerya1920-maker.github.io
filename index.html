@@ -1168,13 +1168,17 @@ const CONDS=[["rough","Черновая",2000000],["second","Вторичка",2
 function matCost(){const c=CONDS.find(x=>x[0]===(clientState.calcCond||"rough"))||CONDS[0];return {label:c[1],sum:Math.round(c[2]/MAT_BASE*clientState.calcArea/1000)*1000,base:c[2]}}
 const PROJ_GRP=["plan","work2d","design","home","invest"];
 const PAIRS=[["plan","home"]];function pairOK(a,b){return PAIRS.some(x=>(x[0]===a&&x[1]===b)||(x[0]===b&&x[1]===a))}
+/* Новогодняя акция: −20% на все услуги по промокоду до 15.01.2027 включительно */
+const NY={code:"2027PRM",pct:20,end:"2027-01-15"};function nyOn(){return new Date().toISOString().slice(0,10)<=NY.end}
+function nyApplied(){return nyOn()&&String(clientState.promo||"").trim().toUpperCase()===NY.code}
+const NY_BAR={id:"ny",title:"Новогодняя акция",text:"−20% на все услуги до 15 января",promo:NY.code,cta:"Применить"};
 const PROMO_END="2026-12-30";function promoOn(){return new Date().toISOString().slice(0,10)<=PROMO_END}
 function dealPrice(p,sel,area){if(p.id==="complect"&&sel.super)return 0;if(p.id==="plan"&&sel.home)return 2500;if(p.id==="super"&&sel.real&&promoOn())return Math.round(p.price*0.3);return p.unit==="m2"?priceAt(p,area):p.price}
 function calcPartial(){const tmp=document.createElement("div");tmp.innerHTML=secCalc();const nr=tmp.querySelector(".calc-result"),old=document.querySelector("#s-calc .calc-result");if(nr&&old)old.replaceWith(nr)}
 function calcSum(){
  const s=S.site,sel=clientState.calcSel,rows=[];
  s.prices.forEach(p=>{if(!sel[p.id])return;const qty=p.unit==="month"?clientState.calcMonths:p.unit==="fixed"?1:clientState.calcArea;const up=dealPrice(p,sel,clientState.calcArea);rows.push({p,qty,up,sum:up*qty,ask:!(p.price>0)})});
- const mat=sel.real?matCost():null;const fin=sel.real?FINISH_M2*clientState.calcArea:0;return {rows,mat,fin,total:rows.reduce((a,r)=>a+r.sum,0)+(mat?mat.sum:0)+fin};
+ const mat=sel.real?matCost():null;const fin=sel.real?FINISH_M2*clientState.calcArea:0;const svc=rows.reduce((a,r)=>a+r.sum,0);const ny=nyApplied()?Math.round(svc*NY.pct/100):0;return {rows,mat,fin,ny,total:svc-ny+(mat?mat.sum:0)+fin};
 }
 function secPortfolio(preview){
  const s=S.site;
@@ -1216,7 +1220,7 @@ function priceShort(p){return p.price>0?(p.unit==="fixed"?money(p.price)+' ра�
 function secPrices(){
  const s=S.site;
  return '<section class="block alt" id="s-prices"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">Прайс</div><h2>Пакеты и тарифы</h2></div><button class="btn ghost" data-act="page" data-id="prices">Смотреть, что входит</button></div><div class="ptiles">'+
- s.prices.map((p,i)=>'<button class="ptile'+(p.feat?' feat':'')+'" data-act="tariffGo" data-id="'+p.id+'">'+(p.hot?'<span class="hot" title="Популярно">🔥</span>':'')+'<span class="pn">'+(p.group==="build"?'Ремонт':'0'+(i+1))+'</span><b>'+esc(p.name)+'</b><span class="ps">'+esc(p.sub||"")+'</span><span class="pp">'+priceShort(p)+'</span></button>').join("")+'</div>'+(tiers().length>1?'<div class="disc-note"><b>Скидка от 100 м²</b> на планировку, 2D, дизайн-проект, хоумстейдж и инвест-проект: до −'+Math.round(tiers()[tiers().length-1].pct)+'% при площади свыше '+tiers()[tiers().length-2].max+' м². <button class="lnk2" data-act="tariffGo" data-id="disc">Таблица цен</button></div>':'')+'</div></section>';
+ s.prices.map((p,i)=>'<button class="ptile'+(p.feat?' feat':'')+'" data-act="tariffGo" data-id="'+p.id+'">'+(p.hot?'<span class="hot" title="Популярно">🔥</span>':'')+'<span class="pn">'+(p.group==="build"?'Ремонт':'0'+(i+1))+'</span><b>'+esc(p.name)+'</b><span class="ps">'+esc(p.sub||"")+'</span><span class="pp">'+priceShort(p)+'</span></button>').join("")+'</div>'+(nyOn()?'<div class="disc-note"><b>Новогодняя акция:</b> ещё −'+NY.pct+'% на все услуги до 15 января по промокоду <b>'+NY.code+'</b>. Введите его в калькуляторе или в заявке.</div>':'')+(tiers().length>1?'<div class="disc-note"><b>Скидка от 100 м²</b> на планировку, 2D, дизайн-проект, хоумстейдж и инвест-проект: до −'+Math.round(tiers()[tiers().length-1].pct)+'% при площади свыше '+tiers()[tiers().length-2].max+' м². <button class="lnk2" data-act="tariffGo" data-id="disc">Таблица цен</button></div>':'')+'</div></section>';
 }
 function secCalc(){
  const s=S.site,c=calcSum(),sel=clientState.calcSel;
@@ -1226,10 +1230,11 @@ function secCalc(){
  '<div class="field"><label for="carea-num">Площадь, м²</label><div class="area-in"><input id="carea-num" type="number" inputmode="numeric" min="1" max="5000" value="'+clientState.calcArea+'" data-in="careanum"><span>м²</span></div><input id="carea" type="range" min="20" max="1500" step="10" value="'+Math.min(1500,clientState.calcArea)+'" data-in="carea" aria-label="Площадь, ползунок"></div>'+
  '<div class="field"><label>Состояние объекта</label><div class="seg">'+CONDS.map(c=>'<button class="'+((clientState.calcCond||"rough")===c[0]?'on':'')+'" data-act="ccond" data-id="'+c[0]+'">'+c[1]+'</button>').join("")+'</div></div>'+
  '<div class="field"><label>Услуги <span class="svc-hint">один проект на выбор — нажмите другой, чтобы переключить (планировку можно вместе с хоумстейджем) + сопровождение, комплектация, реализация</span></label><div class="seg">'+s.prices.map(p=>'<button class="'+(sel[p.id]?'on':'')+(p.id==="complect"&&sel.super?' gift':'')+'" aria-pressed="'+!!sel[p.id]+'" data-act="ctier" data-id="'+p.id+'">'+esc(p.name)+'</button>').join("")+'</div></div>'+
+ (nyOn()?'<div class="field"><label for="cpromo">Промокод</label><input id="cpromo" data-in="cpromo" value="'+esc(clientState.promo||"")+'" placeholder="Например, '+NY.code+'" autocomplete="off" style="text-transform:uppercase"></div>':'')+
  (hasM?'<div class="field"><label for="cmonths">Срок сопровождения: <b>'+clientState.calcMonths+' мес.</b></label><input id="cmonths" type="range" min="1" max="12" step="1" value="'+clientState.calcMonths+'" data-in="cmonths"></div>':'')+'</div>'+
  '<div class="calc-result"><div class="eyebrow">Предварительная стоимость</div><div class="sum">'+(c.total>0?'от '+money(c.total):c.rows.length?'По запросу':'—')+'</div><ul>'+
  (c.rows.length?c.rows.map(r=>r.ask?'<li>'+esc(r.p.name)+': стоимость по запросу</li>':r.up===0&&r.p.id==="complect"?'<li class="disc-li">Комплектация: в подарок при авторском сопровождении</li>':'<li>'+esc(r.p.name)+': '+(r.up<r.p.price?'<s>'+money(r.p.price)+'</s> ':'')+money(r.up)+(r.p.unit==="fixed"?' разово':' × '+r.qty+(r.p.unit==="month"?' мес.':' м²'))+' = '+money(r.sum)+'</li>').join(""):'<li>Выберите хотя бы одну услугу</li>')+
- (sel.plan&&sel.home?'<li class="disc-li">Планировка в пакете с хоумстейджем — 2 500 ₸/м²</li>':'')+(sel.super&&sel.real&&promoOn()?'<li class="disc-li">−70% на авторское сопровождение при заказе реализации, до 30.12.2026</li>':'')+(tierIdx(clientState.calcArea)>0&&c.rows.some(r=>r.up<r.p.price&&r.p.unit==="m2"&&!(r.p.id==="plan"&&sel.home))?'<li class="disc-li">Применена скидка от площади −'+Math.round(tiers()[tierIdx(clientState.calcArea)].pct)+'%</li>':'')+(c.fin?'<li class="mat-li">Чистовой материал и мебель: ≈ '+money(c.fin)+' <small>(ориентир от 90 000 ₸/м², точно — после дизайн-проекта)</small></li>':'')+(c.mat?'<li class="mat-li">Материалы, '+esc(c.mat.label.toLowerCase())+': ≈ '+money(c.mat.sum)+' <small>(ориентир '+money(c.mat.base)+' на 55 м²)</small></li>':(sel.real?'':'<li class="muted-li">Материалы считаются при выборе реализации</li>'))+'<li>'+esc(clientState.calcType)+', '+clientState.calcArea+' м². Точную смету пришлём после обмера</li></ul><button class="btn" data-act="openForm" data-from="calc">Получить точный расчёт</button></div></div></div></section>';
+ (sel.plan&&sel.home?'<li class="disc-li">Планировка в пакете с хоумстейджем — 2 500 ₸/м²</li>':'')+(sel.super&&sel.real&&promoOn()?'<li class="disc-li">−70% на авторское сопровождение при заказе реализации, до 30.12.2026</li>':'')+(tierIdx(clientState.calcArea)>0&&c.rows.some(r=>r.up<r.p.price&&r.p.unit==="m2"&&!(r.p.id==="plan"&&sel.home))?'<li class="disc-li">Применена скидка от площади −'+Math.round(tiers()[tierIdx(clientState.calcArea)].pct)+'%</li>':'')+(c.ny?'<li class="disc-li">Новогодняя акция, промокод '+NY.code+': −'+NY.pct+'% на услуги = −'+money(c.ny)+'</li>':(nyOn()&&c.rows.length?'<li class="disc-li">Введите промокод '+NY.code+' — ещё −'+NY.pct+'% на все услуги до 15 января</li>':''))+(c.fin?'<li class="mat-li">Чистовой материал и мебель: ≈ '+money(c.fin)+' <small>(ориентир от 90 000 ₸/м², точно — после дизайн-проекта)</small></li>':'')+(c.mat?'<li class="mat-li">Материалы, '+esc(c.mat.label.toLowerCase())+': ≈ '+money(c.mat.sum)+' <small>(ориентир '+money(c.mat.base)+' на 55 м²)</small></li>':(sel.real?'':'<li class="muted-li">Материалы считаются при выборе реализации</li>'))+'<li>'+esc(clientState.calcType)+', '+clientState.calcArea+' м². Точную смету пришлём после обмера</li></ul><button class="btn" data-act="openForm" data-from="calc">Получить точный расчёт</button></div></div></div></section>';
 }
 function secBA(){return '<section class="block" id="s-ba"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">До и после</div><h2>От бетона до готового интерьера</h2></div><span class="muted">Реализация с авторским сопровождением</span></div><div class="ba"><img src="img/ba-1.jpg" alt="Объект до и после ремонта"><img src="img/ba-2.jpg" alt="Объект до и после ремонта"><img src="img/ba-3.jpg" alt="Объект до и после ремонта"></div></div></section>'}
 function secProcess(){const s=S.site;return '<section class="block alt" id="s-process"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">Как мы работаем</div><h2>Пять этапов проекта</h2></div></div><div class="dirs five">'+s.process.map((d,i)=>'<div class="dir"><div class="num">0'+(i+1)+'</div><h4>'+esc(d.t)+'</h4><p>'+esc(d.d)+'</p></div>').join("")+'</div></div></section>'}
@@ -1338,7 +1343,7 @@ function secCta(){const s=S.site;return '<section class="block cta-strip"><div c
 function pageHead(t,sub){return '<section class="page-head"><div class="wrap"><div class="eyebrow">'+esc(t[0])+'</div><h1>'+esc(t[1])+'</h1>'+(sub?'<p class="lead">'+esc(sub)+'</p>':'')+'</div></section>'}
 function renderClient(){
  const s=S.site,sec=s.sections,pg=route;
- const bar=activeCamps("bar")[0],banner=pg==="home"?activeCamps("banner")[0]:null;
+ const bar=activeCamps("bar")[0]||(nyOn()?NY_BAR:null),banner=pg==="home"?activeCamps("banner")[0]:null;
  [bar,banner].forEach(c=>{if(c&&!seenCamps[c.id]){seenCamps[c.id]=1;c.views++}});
  const wa='https://wa.me/'+esc(s.whatsapp||"");
  let body="";
@@ -1670,7 +1675,8 @@ document.addEventListener("click",e=>{
    clientState.formSent=false;
    showModal('<div class="modal"><button class="x" data-act="close" aria-label="Закрыть">×</button>'+formHTML("modal",a.dataset.tier,a.dataset.purpose)+'</div>');break;
   case "newForm":clientState.formSent=false;document.getElementById("form-inline").innerHTML=formHTML("inline");break;
-  case "campClick":{const c=S.campaigns.find(x=>x.id===id);if(c){c.clicks++;attribution={source:"campaign",campaign:c.id,ref:""};clientState.promo=c.promo;save()}
+  case "campClick":{if(id==="ny"){clientState.promo=NY.code;attribution=Object.assign({},attribution);if(route!=="home")go("home");else{const y=window.scrollY;render();window.scrollTo(0,y)}setTimeout(()=>{const el=document.getElementById("s-calc");if(el)el.scrollIntoView({behavior:"smooth"})},80);break}
+  const c=S.campaigns.find(x=>x.id===id);if(c){c.clicks++;attribution={source:"campaign",campaign:c.id,ref:""};clientState.promo=c.promo;save()}
    clientState.formSent=false;showModal('<div class="modal"><button class="x" data-act="close" aria-label="Закрыть">×</button>'+formHTML("modal")+'</div>');break}
   case "mkRef":{const n=(document.getElementById("refname").value||"").trim();if(!n){toast("Введите имя");break}
    const code=(n.replace(/[^A-Za-zА-Яа-яЁё]/g,"").slice(0,3)||"REF").toUpperCase().replace(/[^A-Z]/g,"")+Math.floor(10+Math.random()*89);
@@ -1725,6 +1731,7 @@ document.addEventListener("input",e=>{
  const t=e.target;
  if(t.dataset.in==="cmonths"){clientState.calcMonths=+t.value;const lb=document.querySelector('label[for="cmonths"] b');if(lb)lb.textContent=t.value+" мес.";calcPartial();return}
  if(t.dataset.in==="careanum"){const v=Math.round(+t.value);if(!v||v<1)return;clientState.calcArea=Math.min(5000,v);const sl=document.getElementById("carea");if(sl)sl.value=Math.min(1500,clientState.calcArea);const tmp=document.createElement("div");tmp.innerHTML=secCalc();const nr=tmp.querySelector(".calc-result"),old=document.querySelector("#s-calc .calc-result");if(nr&&old)old.replaceWith(nr);return}
+ if(t.dataset.in==="cpromo"){clientState.promo=t.value.trim().toUpperCase();calcPartial();return}
  if(t.dataset.in==="carea"){clientState.calcArea=+t.value;const n=document.getElementById("carea-num");if(n)n.value=t.value;calcPartial();return}
  if(t.dataset.site){setPath(S.site,t.dataset.site,t.value);auditSoon("изменил тексты сайта");save();return}
  if(t.dataset.price!=null){auditSoon("изменил цены и пакеты");const p=S.site.prices[+t.dataset.price],k=t.dataset.k;if(k!=="feat")delete p.draft;p[k]=k==="price"?(+t.value||0):k==="feat"?t.checked:k==="items"?t.value.split("\n").map(x=>x.trim()).filter(Boolean):t.value;save();return}
