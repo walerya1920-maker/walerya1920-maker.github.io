@@ -1498,7 +1498,7 @@ function renderClient(){
  }
  app.innerHTML=
  (bar?'<div class="promo-bar"><div class="wrap"><span><b>'+esc(bar.title)+'</b> · '+esc(bar.text)+(bar.promo?' · промокод <b>'+esc(bar.promo)+'</b>':'')+'</span><button data-act="campClick" data-id="'+bar.id+'">'+esc(bar.cta)+'</button></div></div>':'')+
- '<header class="site"><div class="wrap"><button class="logo" data-act="page" data-id="home" aria-label="На главную"><img src="img/logo.png" alt="'+esc(s.brand)+'" width="150" height="25"><small>'+esc(s.brandSub)+'</small></button>'+
+ '<header class="site"><div class="wrap"><button class="logo" data-act="logoHome" aria-label="На главную"><img src="img/logo.png" alt="'+esc(s.brand)+'" width="150" height="25"><small>'+esc(s.brandSub)+'</small></button>'+
  '<nav class="main">'+PAGES.map(p=>'<button class="'+(pg===p[0]?'on':'')+'" data-act="page" data-id="'+p[0]+'"'+(pg===p[0]?' aria-current="page"':'')+'>'+p[1]+'</button>').join("")+'</nav>'+
  '<a class="phone" href="'+wa+'">'+esc(s.phone)+'</a><a class="btn sm wa" href="'+wa+'">WhatsApp</a><button class="btn sm wa cab-btn" data-act="page" data-id="cabinet" aria-label="Кабинет клиента"><span class="cb-l">Кабинет клиента</span><span class="cb-s">Кабинет</span></button></div>'+
  '<nav class="main mobile">'+PAGES.map(p=>'<button class="'+(pg===p[0]?'on':'')+'" data-act="page" data-id="'+p[0]+'">'+p[1]+'</button>').join("")+'</nav></header>'+
@@ -1800,6 +1800,7 @@ document.addEventListener("click",e=>{
   case "ctype":{clientState.calcType=id;const y=window.scrollY;renderClient();window.scrollTo(0,y);break}
   case "ctier":{const sel=clientState.calcSel;if(id==="complect"&&sel.super)break;sel[id]=!sel[id];if(id==="super")sel.complect=sel.super;const grp=PROJ_GRP;if(grp.includes(id)&&!sel[id]&&grp.some(g=>g!==id&&sel[g])){sel[id]=false}else if(sel[id]&&grp.includes(id))grp.forEach(g=>{if(g!==id&&!pairOK(id,g))sel[g]=false});clientState.calcTier=id;const y=window.scrollY;renderClient();window.scrollTo(0,y);break}
   case "page":go(id);break;
+  case "logoHome":if(route==="home"){window.scrollTo({top:0,behavior:"smooth"})}else go("home");break;
   case "slideStep":heroIdx+=+id;applySlide();break;
   case "pick":{const [q,v]=id.split(":");(clientState.pick=clientState.pick||{})[q]=v;const y=window.scrollY;render();window.scrollTo(0,y);if(PICK_Q.every(x=>clientState.pick[x[0]]))setTimeout(()=>{const r=document.querySelector(".pick-res");if(r)r.scrollIntoView({behavior:"smooth",block:"center"})},60);break}
   case "pickReset":{clientState.pick={};const y=window.scrollY;render();window.scrollTo(0,y);break}
