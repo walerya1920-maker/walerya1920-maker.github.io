@@ -306,7 +306,11 @@ body.client{background:var(--bg);color:var(--ink)}
 @media (max-width:1000px){.dirs.five{grid-template-columns:repeat(2,1fr)}}
 .ba{display:grid;grid-template-columns:1.2fr 1.2fr .8fr;gap:16px}
 .ba img{width:100%;height:100%;max-height:420px;object-fit:cover;display:block}
-@media (max-width:860px){.ba{grid-template-columns:1fr}}
+.ba.has-v{grid-template-columns:auto 1.2fr 1.2fr .8fr;align-items:stretch}
+.ba-v{margin:0;display:flex;flex-direction:column;gap:6px}
+.ba-v video{height:420px;aspect-ratio:9/16;width:auto;max-width:100%;object-fit:cover;background:#000;display:block}
+.ba-v figcaption{font-size:12px;color:var(--muted)}
+@media (max-width:860px){.ba,.ba.has-v{grid-template-columns:1fr}.ba-v video{height:auto;width:100%;max-height:78vh;margin:0 auto}}
 .styles{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:22px}
 .styles .chip{cursor:default;font-weight:500}
 .about-pic{aspect-ratio:4/3.4;overflow:hidden}
@@ -338,6 +342,11 @@ body.client{background:var(--bg);color:var(--ink)}
 @media (max-width:860px){.vgrid{grid-template-columns:repeat(2,1fr)}}
 .vcard{display:block;text-decoration:none;color:inherit;background:var(--paper);border:1px solid var(--line)}
 .vcard:hover{border-color:var(--brass)}
+button.vcard{width:100%;padding:0;text-align:left;font:inherit;cursor:pointer}
+.modal.vmodal{max-width:440px;padding:40px 14px 14px;background:#000}
+.vmodal video{width:100%;max-height:78vh;display:block;background:#000}
+.vmodal .vt{color:#fff;font-size:14px;margin-top:10px}
+.vmodal .x{color:#fff}
 .vcover{aspect-ratio:4/5;background:linear-gradient(160deg,#1b2140,#0b0f1c 70%);background-size:cover;background-position:center;position:relative;display:grid;place-items:center}
 .vcover .play{width:64px;height:64px;border-radius:50%;border:1px solid rgba(255,255,255,.7);display:grid;place-items:center;background:rgba(0,0,0,.25)}
 .vcover .play::after{content:"";border-left:18px solid #fff;border-top:11px solid transparent;border-bottom:11px solid transparent;margin-left:5px}
@@ -1018,6 +1027,7 @@ function seed(){
   stats:{projects:100,styles:20,cities:3},
   sections:{portfolio:true,prices:true,calc:true,process:true,beforeafter:true,reviews:true,dirs:true,about:true,ref:true,seo:true},
   videos:[
+   {id:"vbt1",title:"Отзыв клиента · ЖК Бес Тулга",object:"Дизайн и реализация · 89 м²",file:"video/bestulga-review.mp4",url:"",date:"2026-11-27",cover:"video/bestulga-review.jpg"},
    {id:"v1",title:"Ритм и пропорции",object:"",url:"https://www.instagram.com/parametric_int/reel/DeL_F1monKV/",date:"2026-10-07",cover:"img/v1.jpg"},
    {id:"v2",title:"Тихая роскошь",object:"",url:"https://www.instagram.com/parametric_int/reel/Ddl-O9KoIYr/",date:"2026-09-22",cover:"img/v2.jpg"},
    {id:"v3",title:"Гостевая спальня",object:"",url:"https://www.instagram.com/parametric_int/reel/DdCEIyApK_k/",date:"2026-09-08",cover:"img/v3.jpg"},
@@ -1122,7 +1132,7 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(S));memoryOnly=false
 S=load()||seed();
 if(!S.demoWiped){cleanDemo(S);save()}
 /* синхронизируем витрину портфолио с кодом: добавляем новые проекты из seed, не трогая остальные данные */
-{const _sd=seed();const _have=new Set((S.site&&S.site.portfolio||[]).map(p=>p.id));(_sd.site.portfolio||[]).forEach(p=>{if(!_have.has(p.id))S.site.portfolio.push(p)});const _hr=new Set((S.site.reviews||[]).map(r=>r.id));(_sd.site.reviews||[]).forEach(r=>{S.site.reviews=S.site.reviews||[];if(!_hr.has(r.id))S.site.reviews.push(r);else if(r.chat){const k=S.site.reviews.findIndex(x=>x.id===r.id);S.site.reviews[k]=r}});}
+{const _sd=seed();const _have=new Set((S.site&&S.site.portfolio||[]).map(p=>p.id));(_sd.site.portfolio||[]).forEach(p=>{if(!_have.has(p.id))S.site.portfolio.push(p)});const _hv=new Set((S.site.videos||[]).map(v=>v.id));(_sd.site.videos||[]).slice().reverse().forEach(v=>{if(!_hv.has(v.id))(S.site.videos=S.site.videos||[]).unshift(v)});const _hr=new Set((S.site.reviews||[]).map(r=>r.id));(_sd.site.reviews||[]).forEach(r=>{S.site.reviews=S.site.reviews||[];if(!_hr.has(r.id))S.site.reviews.push(r);else if(r.chat){const k=S.site.reviews.findIndex(x=>x.id===r.id);S.site.reviews[k]=r}});}
 let session=null;try{const s=sessionStorage.getItem(KEY+"-s");if(s)session=JSON.parse(s)}catch(e){}
 function setSession(v){session=v;try{v?sessionStorage.setItem(KEY+"-s",JSON.stringify(v)):sessionStorage.removeItem(KEY+"-s")}catch(e){}}
 
@@ -1270,7 +1280,7 @@ function secCalc(){
  (c.rows.length?c.rows.map(r=>r.ask?'<li>'+esc(r.p.name)+': стоимость по запросу</li>':r.up===0&&r.p.id==="complect"?'<li class="disc-li">Комплектация: в подарок при авторском сопровождении</li>':'<li>'+esc(r.p.name)+': '+(r.up<r.p.price?'<s>'+money(r.p.price)+'</s> ':'')+money(r.up)+(r.p.unit==="fixed"?' разово':' × '+r.qty+(r.p.unit==="month"?' мес.':' м²'))+' = '+money(r.sum)+'</li>').join(""):'<li>Выберите хотя бы одну услугу</li>')+
  (sel.plan&&sel.home?'<li class="disc-li">Планировка в пакете с хоумстейджем — 2 500 ₸/м²</li>':'')+(sel.super&&sel.real&&promoOn()?'<li class="disc-li">−70% на авторское сопровождение при заказе реализации, до 30.12.2026</li>':'')+(tierIdx(clientState.calcArea)>0&&c.rows.some(r=>r.up<r.p.price&&r.p.unit==="m2"&&!(r.p.id==="plan"&&sel.home))?'<li class="disc-li">Применена скидка от площади −'+Math.round(tiers()[tierIdx(clientState.calcArea)].pct)+'%</li>':'')+(c.ny?'<li class="disc-li">Новогодняя акция, промокод '+NY.code+': −'+NY.pct+'% на услуги = −'+money(c.ny)+'</li>':(nyOn()&&c.rows.length?'<li class="disc-li">Введите промокод '+NY.code+' — ещё −'+NY.pct+'% на все услуги до 15 января</li>':''))+(c.fin?'<li class="mat-li">Чистовой материал и мебель: ≈ '+money(c.fin)+' <small>(ориентир от 90 000 ₸/м², точно — после дизайн-проекта)</small></li>':'')+(c.mat?'<li class="mat-li">Материалы, '+esc(c.mat.label.toLowerCase())+': ≈ '+money(c.mat.sum)+' <small>(ориентир '+money(c.mat.base)+' на 55 м²)</small></li>':(sel.real?'':'<li class="muted-li">Материалы считаются при выборе реализации</li>'))+'<li>'+esc(clientState.calcType)+', '+clientState.calcArea+' м². Точную смету пришлём после обмера</li></ul><button class="btn" data-act="openForm" data-from="calc">Получить точный расчёт</button></div></div></div></section>';
 }
-function secBA(){return '<section class="block" id="s-ba"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">До и после</div><h2>От бетона до готового интерьера</h2></div><span class="muted">Реализация с авторским сопровождением</span></div><div class="ba"><img src="img/ba-1.jpg" alt="Объект до и после ремонта"><img src="img/ba-2.jpg" alt="Объект до и после ремонта"><img src="img/ba-3.jpg" alt="Объект до и после ремонта"></div></div></section>'}
+function secBA(){return '<section class="block" id="s-ba"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">До и после</div><h2>От бетона до готового интерьера</h2></div><span class="muted">Реализация с авторским сопровождением</span></div><div class="ba has-v"><figure class="ba-v"><video src="video/bestulga-project-reality.mp4" poster="video/bestulga-project-reality.jpg" muted autoplay loop playsinline controls preload="metadata" aria-label="Видеообзор: проект и реальность, ЖК Бес Тулга"></video><figcaption>Проект = реальность · ЖК Бес Тулга</figcaption></figure><img src="img/ba-1.jpg" alt="Объект до и после ремонта"><img src="img/ba-2.jpg" alt="Объект до и после ремонта"><img src="img/ba-3.jpg" alt="Объект до и после ремонта"></div></div></section>'}
 function secProcess(){const s=S.site;return '<section class="block alt" id="s-process"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">Как мы работаем</div><h2>Пять этапов проекта</h2></div></div><div class="dirs five">'+s.process.map((d,i)=>'<div class="dir"><div class="num">0'+(i+1)+'</div><h4>'+esc(d.t)+'</h4><p>'+esc(d.d)+'</p></div>').join("")+'</div></div></section>'}
 function secDirs(){const s=S.site;return '<section class="block alt" id="s-dirs"><div class="wrap"><div class="sec-head"><div><div class="eyebrow">Направления</div><h2>Чем мы занимаемся</h2></div><button class="btn" data-act="openForm">Оставить заявку</button></div><div class="dirs">'+
  s.dirs.map((d,i)=>'<div class="dir"><div class="num">0'+(i+1)+'</div><h4>'+esc(d.t)+'</h4><p>'+esc(d.d)+'</p></div>').join("")+'</div><div class="styles"><span class="muted">Работаем в стилях:</span> '+s.styles.map(x=>'<span class="chip">'+esc(x)+'</span>').join("")+'</div></div></section>'}
@@ -1464,6 +1474,7 @@ function renderClient(){
 }
 function vCard(v){
  const obj=v.object?esc(v.object):'';
+ if(v.file)return '<button type="button" class="vcard vfile" data-act="vplay" data-id="'+esc(v.id)+'"><div class="vcover"'+(v.cover?' style="background-image:url(\''+esc(v.cover)+'\')"':'')+'><span class="play" aria-hidden="true"></span><span class="vsrc">Видео</span></div><div class="vmeta"><b>'+esc(v.title)+'</b><span>'+(obj?obj+' · ':'')+(v.date?v.date.split("-").reverse().join("."):'')+'</span></div></button>';
  return '<a class="vcard" href="'+esc(v.url)+'" target="_blank" rel="noopener"><div class="vcover"'+(v.cover?' style="background-image:url(\''+esc(v.cover)+'\')"':'')+'><span class="play" aria-hidden="true"></span><span class="vsrc">'+(v.url.indexOf("youtu")>-1?'YouTube':v.url.indexOf("tiktok")>-1?'TikTok':'Instagram')+'</span></div><div class="vmeta"><b>'+esc(v.title)+'</b><span>'+(obj?obj+' · ':'')+(v.date?v.date.split("-").reverse().join("."):'')+'</span></div></a>'}
 function stars(n){return '<span class="stars" aria-label="Оценка '+n+' из 5">'+'★★★★★'.slice(0,n)+'<i>'+'★★★★★'.slice(0,5-n)+'</i></span>'}
 function reviewsHTML(){
@@ -1738,6 +1749,7 @@ document.addEventListener("click",e=>{
   case "revForm":showModal(revFormHTML());break;
   case "revPub":case "revHide":{const r=S.site.reviews.find(x=>x.id===id);r.status=act==="revPub"?"published":"hidden";save();renderPanel();toast(act==="revPub"?"Отзыв опубликован":"Отзыв скрыт");break}
   case "revDel":S.site.reviews=S.site.reviews.filter(x=>x.id!==id);save();renderPanel();break;
+  case "vplay":{const v=(S.site.videos||[]).find(x=>x.id===id);if(v&&v.file)showModal('<div class="modal vmodal"><button class="x" data-act="close" aria-label="Закрыть">×</button><video src="'+esc(v.file)+'" poster="'+esc(v.cover||"")+'" controls autoplay playsinline></video><div class="vt"><b>'+esc(v.title)+'</b>'+(v.object?" · "+esc(v.object):"")+'</div></div>');break}
   case "vDel":S.site.videos=S.site.videos.filter(x=>x.id!==id);save();renderPanel();break;
   case "vUp":{const a2=S.site.videos,i2=a2.findIndex(v=>v.id===id);if(i2>0){[a2[i2-1],a2[i2]]=[a2[i2],a2[i2-1]];save();renderPanel()}break}
   case "more":{clientState.limit+=6;const y=window.scrollY;renderClient();window.scrollTo(0,y);break}
